@@ -2,6 +2,7 @@
 
 **Diplomado Ejecutivo en Automatización Inteligente de Pruebas de Software — Módulo 5**  
 **Autor:** Diego Moreno (`diegoamorenor-ux`)  
+**Repositorio Oficial del Reto 5:** `https://github.com/diegoamorenor-ux/Reto5`  
 
 Este repositorio contiene la solución integral de extremo a extremo para el **Reto Práctico del Módulo 5**, articulando las **6 fases** del ecosistema de calidad moderna sobre la aplicación de comercio electrónico **Tienda QA (`app-tienda`)**:
 

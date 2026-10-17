@@ -2,6 +2,7 @@
 
 - **Programa:** Diplomado Ejecutivo en Automatización Inteligente de Pruebas de Software — Módulo 5
 - **Autor:** Diego Moreno (`diegoamorenor-ux`)
+- **Repositorio de la Solución (GitHub):** `https://github.com/diegoamorenor-ux/Reto5`
 - **Repositorio de Referencia (Solo Lectura):** `https://github.com/oach82/Diplomado-Modulo5`
 - **Aplicación Bajo Prueba (SUT):** E-commerce **Tienda QA (`app-tienda`)** — SPA + API REST (`Node.js / Express`)
 - **Fecha:** Octubre 2026
