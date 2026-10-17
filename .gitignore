@@ -1,0 +1,20 @@
+node_modules/
+**/node_modules/
+.venv/
+e2e/.venv/
+__pycache__/
+**/__pycache__/
+.pytest_cache/
+**/.pytest_cache/
+.DS_Store
+*.log
+
+# NOTA DE ARQUITECTURA (Fase 1):
+# En un pipeline productivo real, datos/db.json se incluye en .gitignore porque es
+# un artefacto determinista regenerado automáticamente por `node datos/generar-datos.js`
+# (con semilla fija 12345) durante el stage de Build / postinstall.
+# Para efectos de revisión y calificación del Reto 5 (cuyo checklist exige
+# "Fase 1: generar-datos.js (semilla fija) + db.json" en el repositorio),
+# se deja versionada una copia generada con la semilla fija 12345.
+# datos/db.json
+# app-tienda/datos/db.json

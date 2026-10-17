@@ -1,0 +1,33 @@
+{
+  "consumer": "front-tienda",
+  "provider": "api-tienda",
+  "providerBaseUrl": "http://localhost:3000",
+  "fechaVerificacion": "2026-10-17T19:38:10.415Z",
+  "interaccionesTotales": 3,
+  "pasadas": 3,
+  "falladas": 0,
+  "estadoGlobal": "VERIFIED_GREEN",
+  "detalles": [
+    {
+      "interaccion": "una solicitud GET para obtener la lista del catalogo de productos",
+      "endpoint": "GET /api/productos",
+      "statusEsperado": 200,
+      "statusRecibido": 200,
+      "resultado": "PASSED"
+    },
+    {
+      "interaccion": "una solicitud GET para consultar el detalle del producto con id 1",
+      "endpoint": "GET /api/productos/1",
+      "statusEsperado": 200,
+      "statusRecibido": 200,
+      "resultado": "PASSED"
+    },
+    {
+      "interaccion": "una solicitud POST para confirmar un pedido desde el carrito",
+      "endpoint": "POST /api/pedidos",
+      "statusEsperado": 201,
+      "statusRecibido": 201,
+      "resultado": "PASSED"
+    }
+  ]
+}

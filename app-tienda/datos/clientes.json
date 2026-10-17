@@ -1,0 +1,122 @@
+[
+  {
+    "id": 1,
+    "nombre": "Myron Baumbach",
+    "email": "monica1@gmail.com",
+    "documento": "6422036851",
+    "telefono": "3961777575",
+    "fecha_nacimiento": "1987-08-26"
+  },
+  {
+    "id": 2,
+    "nombre": "Israel Ortiz",
+    "email": "austin_fritsch-grady@gmail.com",
+    "documento": "4444368675",
+    "telefono": "3381650950",
+    "fecha_nacimiento": "1963-10-21"
+  },
+  {
+    "id": 3,
+    "nombre": "Derek Tillman",
+    "email": "noah.fahey@yahoo.com",
+    "documento": "8535913500",
+    "telefono": "3892486386",
+    "fecha_nacimiento": "1958-06-06"
+  },
+  {
+    "id": 4,
+    "nombre": "Steven Stroman",
+    "email": "julio90@hotmail.com",
+    "documento": "2473005614",
+    "telefono": "3999741306",
+    "fecha_nacimiento": "1967-08-24"
+  },
+  {
+    "id": 5,
+    "nombre": "Samantha Pagac",
+    "email": "maude_hahn84@hotmail.com",
+    "documento": "7094075955",
+    "telefono": "3420906402",
+    "fecha_nacimiento": "1988-09-29"
+  },
+  {
+    "id": 6,
+    "nombre": "Lauren Rippin",
+    "email": "paris.mcglynn6@hotmail.com",
+    "documento": "7607308585",
+    "telefono": "3288655454",
+    "fecha_nacimiento": "1970-05-23"
+  },
+  {
+    "id": 7,
+    "nombre": "Ross Cronin",
+    "email": "laura87@yahoo.com",
+    "documento": "9748499860",
+    "telefono": "3782257209",
+    "fecha_nacimiento": "1958-03-18"
+  },
+  {
+    "id": 8,
+    "nombre": "Jeff Connelly",
+    "email": "trinity_wehner33@yahoo.com",
+    "documento": "3611384379",
+    "telefono": "3173889590",
+    "fecha_nacimiento": "2001-04-23"
+  },
+  {
+    "id": 9,
+    "nombre": "Pablo Monahan",
+    "email": "tyrel.jast94@gmail.com",
+    "documento": "2525248351",
+    "telefono": "3490897632",
+    "fecha_nacimiento": "2002-10-18"
+  },
+  {
+    "id": 10,
+    "nombre": "Craig Daniel III",
+    "email": "johnson.watsica@yahoo.com",
+    "documento": "4731430265",
+    "telefono": "3255313440",
+    "fecha_nacimiento": "2000-12-16"
+  },
+  {
+    "id": 11,
+    "nombre": "Lela Altenwerth",
+    "email": "judy_jenkins@gmail.com",
+    "documento": "6860281837",
+    "telefono": "3722066801",
+    "fecha_nacimiento": "1981-12-07"
+  },
+  {
+    "id": 12,
+    "nombre": "Lewis Hermann",
+    "email": "samson_weissnat@yahoo.com",
+    "documento": "8884883082",
+    "telefono": "3881458799",
+    "fecha_nacimiento": "2003-05-14"
+  },
+  {
+    "id": 13,
+    "nombre": "Ramona Cassin-Conroy",
+    "email": "petra60@hotmail.com",
+    "documento": "7657004422",
+    "telefono": "3364631800",
+    "fecha_nacimiento": "1967-10-07"
+  },
+  {
+    "id": 14,
+    "nombre": "Sadie Sauer",
+    "email": "shania.mccullough@gmail.com",
+    "documento": "5415196255",
+    "telefono": "3754958476",
+    "fecha_nacimiento": "2003-12-12"
+  },
+  {
+    "id": 15,
+    "nombre": "Lynette Schaden-Streich III",
+    "email": "neoma.hauck86@gmail.com",
+    "documento": "2370228487",
+    "telefono": "3111120871",
+    "fecha_nacimiento": "1958-08-25"
+  }
+]

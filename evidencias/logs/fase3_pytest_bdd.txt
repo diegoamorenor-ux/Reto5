@@ -1,0 +1,18 @@
+============================= test session starts ==============================
+platform darwin -- Python 3.13.4, pytest-9.1.1, pluggy-1.7.0 -- /Users/diegomoreno/Desktop/Diplomado Ejecutivo en Automatización Inteligente de Pruebas de Software/Modulo5/taller5/e2e/.venv/bin/python3.13
+cachedir: .pytest_cache
+rootdir: /Users/diegomoreno/Desktop/Diplomado Ejecutivo en Automatización Inteligente de Pruebas de Software/Modulo5/taller5/e2e
+configfile: pytest.ini
+testpaths: steps
+plugins: xdist-3.8.0, bdd-9.0.0, Faker-40.43.0, playwright-0.10.0, allure-pytest-2.16.2
+collecting ... collected 6 items
+
+steps/test_carrito.py::test_agregar_un_producto_al_carrito_incrementa_el_contador PASSED [ 16%]
+steps/test_carrito.py::test_agregar_el_mismo_producto_dos_veces_acumula_la_cantidad_en_el_carrito PASSED [ 33%]
+steps/test_carrito.py::test_abrir_el_carrito_sin_productos_muestra_mensaje_de_carrito_vacio PASSED [ 50%]
+steps/test_catalogo.py::test_filtrar_productos_por_categoria_hogar PASSED [ 66%]
+steps/test_catalogo.py::test_buscar_un_producto_inexistente_muestra_mensaje_de_sin_resultados PASSED [ 83%]
+steps/test_pedidos.py::test_confirmar_un_pedido_con_un_producto PASSED   [100%]
+
+- generated xml file: /Users/diegomoreno/Desktop/Diplomado Ejecutivo en Automatización Inteligente de Pruebas de Software/Modulo5/taller5/e2e/resultados/junit.xml -
+============================== 6 passed in 4.07s ===============================

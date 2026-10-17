@@ -1,0 +1,17 @@
+
+[1m=== QUALITY GATE 1: SMOKE TEST — API & Front Tienda ===[0m
+[90mBase URL: http://localhost:3000[0m
+
+  [32m✓ OK   [0mGET /api/health responde 200 y estado "ok"
+  [32m✓ OK   [0mGET /api/productos devuelve catálogo con 20+ productos (Faker seed 12345)
+  [32m✓ OK   [0mGET /api/productos/1 tiene id, nombre, precio, stock y categoria
+  [32m✓ OK   [0mGET /api/productos/9999 responde 404 Not Found
+  [32m✓ OK   [0mGET /api/productos?categoria=hogar devuelve solo categoría "hogar"
+  [32m✓ OK   [0mGET / (Front SPA) responde 200 y contiene "Tienda QA"
+  [32m✓ OK   [0mPOST /api/pedidos con datos válidos responde 201 y estado "pendiente"
+
+[1m========================================================[0m
+  Pasadas: [32m7[0m   Falladas: [32m0[0m
+  [32m[1mQUALITY GATE 1 (SMOKE) EN VERDE — La app encendió correctamente[0m
+[1m========================================================[0m
+

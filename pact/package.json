@@ -1,0 +1,11 @@
+{
+  "name": "pact-contract-tests",
+  "version": "1.0.0",
+  "description": "Consumer-Driven Contract Testing (Pact v2.0.0) entre front-tienda (Consumer) y api-tienda (Provider)",
+  "type": "module",
+  "scripts": {
+    "test:consumer": "node consumer/productos.consumer.pact.js",
+    "test:provider": "node provider/verificar-proveedor.js",
+    "verify": "node consumer/productos.consumer.pact.js && node provider/verificar-proveedor.js"
+  }
+}

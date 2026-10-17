@@ -1,0 +1,25 @@
+
+[1m=== QUALITY GATE 2: PRUEBA DE CARGA — API Tienda ===[0m
+[90mEndpoint     : http://localhost:3000/api/productos
+Concurrencia : 15 usuarios virtuales
+Duración     : 4 s
+SLA exigido  : p95 < 800 ms  y  error < 1%[0m
+
+[36mGenerando tráfico concurrente...[0m
+
+[1m── RESULTADOS DE RENDIMIENTO ─────────────────────────[0m
+  Peticiones totales : 59748
+  Exitosas / Errores : [32m59748[0m / [32m0[0m
+  Throughput         : 14921.8 req/s
+  Latencia p50       : 0.85 ms
+  Latencia p95       : 1.96 ms
+  Tasa de error      : 0.00 %
+
+[1m── EVALUACIÓN DEL QUALITY GATE (SLA) ─────────────────[0m
+  p95 < 800 ms   : [32mCUMPLE[0m (medido: 1.96 ms)
+  error < 1%   : [32mCUMPLE[0m (medido: 0.00%)
+
+[1m====================================================[0m
+  [32m[1mQUALITY GATE 2 (CARGA) EN VERDE — Cumple SLA (exit 0)[0m
+[1m====================================================[0m
+

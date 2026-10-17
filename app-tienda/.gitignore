@@ -1,0 +1,5 @@
+node_modules/
+.DS_Store
+*.log
+# En producción db.json no se versiona (se regenera en postinstall con Faker y semilla fija):
+# datos/db.json

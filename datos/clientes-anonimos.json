@@ -1,0 +1,122 @@
+[
+  {
+    "id": 1,
+    "nombre": "Ms. Eva Koelpin",
+    "email": "mo***@***.com",
+    "documento": "aea010c676aa",
+    "telefono": "********75",
+    "anio_nacimiento": 1987
+  },
+  {
+    "id": 2,
+    "nombre": "Ramon Nolan",
+    "email": "au***@***.com",
+    "documento": "9b3c3fa7e620",
+    "telefono": "********50",
+    "anio_nacimiento": 1963
+  },
+  {
+    "id": 3,
+    "nombre": "Lora Yundt",
+    "email": "no***@***.com",
+    "documento": "ce7bd299e9c4",
+    "telefono": "********86",
+    "anio_nacimiento": 1958
+  },
+  {
+    "id": 4,
+    "nombre": "Karl Hintz",
+    "email": "ju***@***.com",
+    "documento": "1a7e42c7ab83",
+    "telefono": "********06",
+    "anio_nacimiento": 1967
+  },
+  {
+    "id": 5,
+    "nombre": "Isabel Monahan V",
+    "email": "ma***@***.com",
+    "documento": "f0d5fd10a26a",
+    "telefono": "********02",
+    "anio_nacimiento": 1988
+  },
+  {
+    "id": 6,
+    "nombre": "Colleen Fahey",
+    "email": "pa***@***.com",
+    "documento": "c796156774f2",
+    "telefono": "********54",
+    "anio_nacimiento": 1970
+  },
+  {
+    "id": 7,
+    "nombre": "Leonard Ankunding",
+    "email": "la***@***.com",
+    "documento": "38fc9d1a27be",
+    "telefono": "********09",
+    "anio_nacimiento": 1958
+  },
+  {
+    "id": 8,
+    "nombre": "Ramon Grimes",
+    "email": "tr***@***.com",
+    "documento": "8c0b3af306d6",
+    "telefono": "********90",
+    "anio_nacimiento": 2001
+  },
+  {
+    "id": 9,
+    "nombre": "James Dicki",
+    "email": "ty***@***.com",
+    "documento": "9f25c9062e9f",
+    "telefono": "********32",
+    "anio_nacimiento": 2002
+  },
+  {
+    "id": 10,
+    "nombre": "Javier Buckridge",
+    "email": "jo***@***.com",
+    "documento": "8223b1e51efa",
+    "telefono": "********40",
+    "anio_nacimiento": 2000
+  },
+  {
+    "id": 11,
+    "nombre": "Glenda Balistreri",
+    "email": "ju***@***.com",
+    "documento": "0e9081ff7d6c",
+    "telefono": "********01",
+    "anio_nacimiento": 1981
+  },
+  {
+    "id": 12,
+    "nombre": "Blake Legros",
+    "email": "sa***@***.com",
+    "documento": "c550f12d6323",
+    "telefono": "********99",
+    "anio_nacimiento": 2003
+  },
+  {
+    "id": 13,
+    "nombre": "Miss Alison Pouros",
+    "email": "pe***@***.com",
+    "documento": "4e47c8c1d6f1",
+    "telefono": "********00",
+    "anio_nacimiento": 1967
+  },
+  {
+    "id": 14,
+    "nombre": "Julio Reinger",
+    "email": "sh***@***.com",
+    "documento": "37f377e23d7e",
+    "telefono": "********76",
+    "anio_nacimiento": 2003
+  },
+  {
+    "id": 15,
+    "nombre": "Fernando Gulgowski",
+    "email": "ne***@***.com",
+    "documento": "2980637160f8",
+    "telefono": "********71",
+    "anio_nacimiento": 1958
+  }
+]

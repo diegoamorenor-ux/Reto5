@@ -1,0 +1,22 @@
+{
+  "name": "reto5-qa-cloud-native",
+  "version": "1.0.0",
+  "description": "Reto 5 — QA Cloud-Native: Automatización Inteligente con IA Generativa",
+  "type": "module",
+  "scripts": {
+    "dump-real": "node datos/1-generar-dump-real.js",
+    "anonimizar": "node datos/2-anonimizar.js",
+    "generar": "node datos/1-generar-dump-real.js && node datos/2-anonimizar.js && node datos/generar-datos.js",
+    "start": "node app-tienda/servidor/server.js",
+    "smoke": "node pipeline/tests/smoke-api.js",
+    "carga:verde": "SLA_P95_MS=800 SLA_ERROR_PCT=1 CONCURRENCIA=15 DURACION_S=5 node pipeline/tests/carga-simple.js",
+    "carga:rojo": "SLA_P95_MS=1 SLA_ERROR_PCT=1 CONCURRENCIA=25 DURACION_S=4 node pipeline/tests/carga-simple.js",
+    "pact:consumer": "node pact/consumer/productos.consumer.pact.js",
+    "pact:provider": "node pact/provider/verificar-proveedor.js",
+    "pact:verify": "node pact/consumer/productos.consumer.pact.js && node pact/provider/verificar-proveedor.js"
+  },
+  "dependencies": {
+    "@faker-js/faker": "^9.0.3",
+    "express": "^4.21.0"
+  }
+}

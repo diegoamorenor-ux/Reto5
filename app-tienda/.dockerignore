@@ -1,0 +1,9 @@
+node_modules
+**/node_modules
+.git
+.venv
+e2e/.venv
+e2e/resultados
+evidencias
+*.log
+.DS_Store

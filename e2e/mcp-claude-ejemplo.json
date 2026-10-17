@@ -1,0 +1,9 @@
+{
+  "_comentario": "Configuración de Claude Desktop / Claude Code para conectar el servidor MCP de Playwright y explorar el DOM en vivo de http://localhost:3000 antes de generar nuevos escenarios BDD con Screenplay.",
+  "mcpServers": {
+    "playwright": {
+      "command": "npx",
+      "args": ["@playwright/mcp@latest"]
+    }
+  }
+}

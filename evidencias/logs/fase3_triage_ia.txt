@@ -1,0 +1,11 @@
+
+[1m=== TRIAGE DE FALLOS (IA-ready) - resultados/junit.xml ===[0m
+  Total      : 6
+  [32mPasadas    : 6[0m
+  [32mFallidas   : 0[0m
+  [32mErrores    : 0[0m
+  [90mSaltadas   : 0[0m
+  Tiempo     : 4.0 s
+
+  [32m[1mTodo en verde. No hay nada que triar.[0m
+

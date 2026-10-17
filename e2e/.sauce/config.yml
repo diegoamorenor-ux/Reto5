@@ -1,0 +1,49 @@
+# ──────────────────────────────────────────────────────────────────────────────
+#  .sauce/config.yml — Configuración de Ejecución Distribuida en Sauce Labs
+# ──────────────────────────────────────────────────────────────────────────────
+#  Define la matriz de navegadores, sistemas operativos reales, resoluciones
+#  y túnel Sauce Connect para ejecutar la suite E2E de Tienda QA en la nube.
+#  En Python (pytest-bdd + Playwright), conftest.py consume las mismas variables
+#  (SAUCE=1, SAUCE_USERNAME, SAUCE_ACCESS_KEY, SAUCE_REGION, SAUCE_BROWSER,
+#  SAUCE_PLATFORM, SAUCE_TUNNEL) para conectarse al grid remoto de Sauce Labs.
+# ──────────────────────────────────────────────────────────────────────────────
+apiVersion: v1alpha
+kind: playwright
+sauce:
+  region: us-west-1
+  concurrency: 2
+  metadata:
+    name: Reto 5 — E2E Tienda QA (Screenplay + BDD)
+    tags:
+      - reto5
+      - e2e
+      - screenplay
+      - cloud-native
+    build: tienda-e2e-${BUILD_BUILDID:-local}
+  tunnel:
+    name: tienda-tunnel-${BUILD_BUILDID:-local}
+
+env:
+  BASE_URL: http://localhost:3000
+
+suites:
+  - name: "Chrome en Windows 11 (Desktop Cloud)"
+    platformName: "Windows 11"
+    screenResolution: "1920x1080"
+    params:
+      browserName: "chromium"
+
+  - name: "Microsoft Edge en Windows 11 (Desktop Cloud)"
+    platformName: "Windows 11"
+    screenResolution: "1920x1080"
+    params:
+      browserName: "MicrosoftEdge"
+
+artifacts:
+  download:
+    when: always
+    match:
+      - "*.xml"
+      - "*.png"
+      - "*.webm"
+    directory: ./resultados/sauce-artifacts/

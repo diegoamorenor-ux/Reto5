@@ -1,0 +1,170 @@
+{
+  "consumer": {
+    "name": "front-tienda"
+  },
+  "provider": {
+    "name": "api-tienda"
+  },
+  "interactions": [
+    {
+      "description": "una solicitud GET para obtener la lista del catalogo de productos",
+      "providerState": "existen al menos 20 productos en el catalogo generados con Faker",
+      "request": {
+        "method": "GET",
+        "path": "/api/productos",
+        "headers": {
+          "Accept": "application/json"
+        }
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/json; charset=utf-8"
+        },
+        "body": [
+          {
+            "id": 1,
+            "nombre": "Licensed Cotton Shoes",
+            "categoria": "hogar",
+            "precio": 374.29,
+            "descripcion": "Ergonomic executive chair upholstered in bonded black leather",
+            "stock": 25
+          }
+        ],
+        "matchingRules": {
+          "$.body": {
+            "min": 20,
+            "match": "type"
+          },
+          "$.body[*].id": {
+            "match": "type"
+          },
+          "$.body[*].nombre": {
+            "match": "type"
+          },
+          "$.body[*].categoria": {
+            "match": "regex",
+            "regex": "^(hogar|tecnologia|ropa|juguetes)$"
+          },
+          "$.body[*].precio": {
+            "match": "type"
+          },
+          "$.body[*].descripcion": {
+            "match": "type"
+          },
+          "$.body[*].stock": {
+            "match": "type"
+          }
+        }
+      }
+    },
+    {
+      "description": "una solicitud GET para consultar el detalle del producto con id 1",
+      "providerState": "el producto con id 1 existe en el catalogo",
+      "request": {
+        "method": "GET",
+        "path": "/api/productos/1",
+        "headers": {
+          "Accept": "application/json"
+        }
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/json; charset=utf-8"
+        },
+        "body": {
+          "id": 1,
+          "nombre": "Licensed Cotton Shoes",
+          "categoria": "hogar",
+          "precio": 374.29,
+          "descripcion": "Ergonomic executive chair upholstered in bonded black leather",
+          "stock": 25
+        },
+        "matchingRules": {
+          "$.body.id": {
+            "match": "equality"
+          },
+          "$.body.nombre": {
+            "match": "type"
+          },
+          "$.body.categoria": {
+            "match": "type"
+          },
+          "$.body.precio": {
+            "match": "type"
+          },
+          "$.body.descripcion": {
+            "match": "type"
+          },
+          "$.body.stock": {
+            "match": "type"
+          }
+        }
+      }
+    },
+    {
+      "description": "una solicitud POST para confirmar un pedido desde el carrito",
+      "providerState": "el producto con id 1 tiene stock disponible",
+      "request": {
+        "method": "POST",
+        "path": "/api/pedidos",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "productoId": 1,
+          "cliente": "ana@tienda-qa.com",
+          "cantidad": 2
+        }
+      },
+      "response": {
+        "status": 201,
+        "headers": {
+          "Content-Type": "application/json; charset=utf-8"
+        },
+        "body": {
+          "id": 1,
+          "productoId": 1,
+          "cliente": "ana@tienda-qa.com",
+          "cantidad": 2,
+          "total": 748.58,
+          "estado": "pendiente",
+          "creado": "2026-10-17T14:00:00.000Z"
+        },
+        "matchingRules": {
+          "$.body.id": {
+            "match": "type"
+          },
+          "$.body.productoId": {
+            "match": "equality"
+          },
+          "$.body.cliente": {
+            "match": "equality"
+          },
+          "$.body.cantidad": {
+            "match": "equality"
+          },
+          "$.body.total": {
+            "match": "type"
+          },
+          "$.body.estado": {
+            "match": "equality"
+          },
+          "$.body.creado": {
+            "match": "type"
+          }
+        }
+      }
+    }
+  ],
+  "metadata": {
+    "pactSpecification": {
+      "version": "2.0.0"
+    },
+    "client": {
+      "name": "pact-js-lightweight",
+      "version": "1.0.0"
+    }
+  }
+}

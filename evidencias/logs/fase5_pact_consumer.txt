@@ -1,0 +1,12 @@
+
+[1m=== PACT CONTRACT TEST — FASE CONSUMER (front-tienda -> api-tienda) ===[0m
+[90m  Pact Mock Server activo en: http://127.0.0.1:56685[0m
+
+  [32m✓ PASS [0mConsumer: GET /api/productos procesa catálogo y formatea precios ($374.29)
+  [32m✓ PASS [0mConsumer: GET /api/productos/1 procesa vista de detalle (Licensed Cotton Shoes)
+  [32m✓ PASS [0mConsumer: POST /api/pedidos recibe orden #1 en estado "pendiente"
+
+  [36m📄 Contrato Pact generado exitosamente en:[0m
+     [1mpact/pacts/front-tienda-api-tienda.json[0m
+  [32m[1mCONSUMER PACT TEST EN VERDE (3/3 interacciones verificadas)[0m
+

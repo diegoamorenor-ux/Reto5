@@ -1,0 +1,21 @@
+
+[1m=== PACT CONTRACT TEST — FASE PROVIDER VERIFICATION (api-tienda) ===[0m
+[90m  Contrato Pact   : pact/pacts/front-tienda-api-tienda.json
+  Provider URL    : http://localhost:3000[0m
+
+  Verificando contrato entre Consumer [1m"front-tienda"[0m y Provider [1m"api-tienda"[0m:
+
+[90m  Given (Provider State): existen al menos 20 productos en el catalogo generados con Faker[0m
+  [32m✓ VERIFICADO [0m[GET /api/productos] — una solicitud GET para obtener la lista del catalogo de productos
+
+[90m  Given (Provider State): el producto con id 1 existe en el catalogo[0m
+  [32m✓ VERIFICADO [0m[GET /api/productos/1] — una solicitud GET para consultar el detalle del producto con id 1
+
+[90m  Given (Provider State): el producto con id 1 tiene stock disponible[0m
+  [32m✓ VERIFICADO [0m[POST /api/pedidos] — una solicitud POST para confirmar un pedido desde el carrito
+
+[1m====================================================================[0m
+  Interacciones verificadas: [32m3[0m / 3   Fallidas: [32m0[0m
+  [32m[1mPACT PROVIDER VERIFICATION EN VERDE — El proveedor cumple el contrato[0m
+[1m====================================================================
+[0m

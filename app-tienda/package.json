@@ -1,0 +1,22 @@
+{
+  "name": "app-tienda",
+  "version": "1.0.0",
+  "description": "Aplicación E-commerce (Front SPA + API REST) para el Reto 5 — QA Cloud-Native con IA Generativa",
+  "type": "module",
+  "main": "servidor/server.js",
+  "scripts": {
+    "dump-real": "node datos/1-generar-dump-real.js",
+    "anonimizar": "node datos/2-anonimizar.js",
+    "generar": "node datos/1-generar-dump-real.js && node datos/2-anonimizar.js && node datos/generar-datos.js",
+    "start": "node servidor/server.js",
+    "dev": "node --watch servidor/server.js",
+    "postinstall": "node datos/1-generar-dump-real.js && node datos/2-anonimizar.js && node datos/generar-datos.js"
+  },
+  "keywords": ["qa", "cloud-native", "tienda", "e2e", "api", "pact", "faker"],
+  "author": "Diego Moreno",
+  "license": "MIT",
+  "dependencies": {
+    "@faker-js/faker": "^9.0.3",
+    "express": "^4.21.0"
+  }
+}

@@ -1,0 +1,22 @@
+
+> reto5-qa-cloud-native@1.0.0 generar
+> node datos/1-generar-dump-real.js && node datos/2-anonimizar.js && node datos/generar-datos.js
+
+===== FASE 1 (Reto Extra A): Dump "real" ficticio generado =====
+Generados 15 clientes con PII en datos/clientes.json
+Ejemplo PII (CRUDO): Myron Baumbach | monica1@gmail.com | doc: 6422036851 | tel: 3961777575
+Siguiente paso: node datos/2-anonimizar.js
+================================================================
+===== FASE 1 (Reto Extra B): Anonimización GDPR Completada =====
+Anonimizados 15 registros en datos/clientes-anonimos.json
+
+ANTES  (PII cruda, NO apta para QA):
+  nombre="Myron Baumbach"  email="monica1@gmail.com"
+  documento="6422036851"  telefono="3961777575"  nacimiento="1987-08-26"
+
+DESPUÉS (Anonimizado, seguro para QA):
+  nombre="Ms. Eva Koelpin"  email="mo***@***.com"
+  documento="aea010c676aa"  telefono="********75"  anio_nacimiento=1987
+================================================================
+datos/db.json generado con 24 productos en 4 categorías (semilla fija: 12345).
+Incluidos 15 clientes anonimizados (Reto Extra GDPR).

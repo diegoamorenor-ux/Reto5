@@ -1,0 +1,347 @@
+# ══════════════════════════════════════════════════════════════════════════════
+#  azure-pipelines.yml — Pipeline CI/CD Integral con Quality Gates (Reto 5)
+# ──────────────────────────────────────────────────────────────────────────────
+#  Fases cubiertas en este pipeline:
+#    - Stage 1 (Build)            : Instala dependencias y regenera datos con Faker
+#                                   (semilla fija 12345 + anonimización GDPR).
+#    - Stage 2 (SmokeTests)       : [QUALITY GATE #1] Valida que la app encendió
+#                                   (/api/health, /api/productos, POST /api/pedidos).
+#    - Stage 3 (LoadTest)         : [QUALITY GATE #2] Evalúa SLA de rendimiento
+#                                   (p95 < 800 ms y error < 1%). Si falla (exit 1),
+#                                   detiene el pipeline y bloquea los siguientes stages.
+#    - Stage 4 (E2E_BDD_Local)    : [QUALITY GATE #3] Ejecuta 6 escenarios Gherkin
+#                                   con Playwright + Screenplay + pytest-bdd, genera
+#                                   JUnit XML, ejecuta triaje IA y sincroniza con
+#                                   Azure Test Plans (@TC19..@TC24).
+#    - Stage 5 (E2E_SauceLabs)    : Ejecución distribuida en la nube (Sauce Labs +
+#                                   Sauce Connect) cambiando solo configuración.
+#    - Stage 6 (Container_Pact)   : Verifica contrato Consumer/Provider con Pact,
+#                                   construye imagen Docker con HEALTHCHECK y publica
+#                                   en Azure Container Registry (ACR).
+# ══════════════════════════════════════════════════════════════════════════════
+
+trigger:
+  branches:
+    include:
+      - main
+      - master
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  NODE_VERSION: '20.x'
+  PYTHON_VERSION: '3.11'
+  BASE_URL: 'http://localhost:3000'
+  # Umbrales del Quality Gate de Carga (Fase 2):
+  # Para demostrar el gate en ROJO en Azure Pipelines, cambia SLA_P95_MS a '0.5' o '1'
+  # en las variables del pipeline. En operación normal se mantiene en '800'.
+  SLA_P95_MS: '800'
+  SLA_ERROR_PCT: '1'
+  # Integración con Azure Test Plans (Fase 3)
+  TEST_PLAN_ID: '14'
+  TEST_SUITE_ID: '18'
+  # Azure Container Registry (Fase 5)
+  ACR_NAME: 'acrtiendareto5'
+  IMAGE_NAME: 'app-tienda'
+
+stages:
+  # ────────────────────────────────────────────────────────────────────────────
+  # STAGE 1: BUILD Y GENERACIÓN DETERMINISTA DE DATOS (FASE 1)
+  # ────────────────────────────────────────────────────────────────────────────
+  - stage: Build
+    displayName: '1. Build & Datos Sintéticos (Faker Seed 12345)'
+    jobs:
+      - job: build_and_seed
+        displayName: 'Instalar dependencias y regenerar db.json'
+        steps:
+          - checkout: self
+
+          - task: NodeTool@0
+            displayName: 'Configurar Node.js $(NODE_VERSION)'
+            inputs:
+              versionSpec: '$(NODE_VERSION)'
+
+          - script: |
+              npm install
+              node datos/1-generar-dump-real.js
+              node datos/2-anonimizar.js
+              node datos/generar-datos.js
+            displayName: 'Instalar app-tienda y generar datos reproducibles (Faker + GDPR)'
+            workingDirectory: 'app-tienda'
+
+          - publish: 'app-tienda/datos/db.json'
+            artifact: 'dataset-generado-seed-12345'
+            displayName: 'Publicar artefacto db.json generado en el Build'
+
+  # ────────────────────────────────────────────────────────────────────────────
+  # STAGE 2: SMOKE TESTS — QUALITY GATE #1 (FASE 2)
+  # ────────────────────────────────────────────────────────────────────────────
+  - stage: SmokeTests
+    displayName: '2. SmokeTests (Quality Gate #1: Disponibilidad)'
+    dependsOn: Build
+    jobs:
+      - job: smoke_gate
+        displayName: 'Validar Health, Catálogo y Creación de Pedido'
+        steps:
+          - checkout: self
+
+          - task: NodeTool@0
+            displayName: 'Configurar Node.js $(NODE_VERSION)'
+            inputs:
+              versionSpec: '$(NODE_VERSION)'
+
+          - script: |
+              npm install
+              node servidor/server.js &
+              echo "Esperando a que app-tienda responda en /api/health..."
+              for i in $(seq 1 20); do
+                if curl -sf http://localhost:3000/api/health > /dev/null; then
+                  echo "App Tienda lista"; break
+                fi
+                sleep 1
+              done
+            displayName: 'Arrancar app-tienda en background'
+            workingDirectory: 'app-tienda'
+
+          # QUALITY GATE #1: Si smoke-api.js devuelve exit 1, el stage falla y detiene el pipeline
+          - script: |
+              BASE_URL=$(BASE_URL) node pipeline/tests/smoke-api.js
+            displayName: '[QUALITY GATE #1] Ejecutar Smoke Test de la API y Front'
+
+  # ────────────────────────────────────────────────────────────────────────────
+  # STAGE 3: LOAD TEST — QUALITY GATE #2 DE RENDIMIENTO SLA (FASE 2)
+  # ────────────────────────────────────────────────────────────────────────────
+  - stage: LoadTest
+    displayName: '3. LoadTest (Quality Gate #2: SLA p95 < 800ms y Error < 1%)'
+    dependsOn: SmokeTests
+    jobs:
+      - job: load_gate
+        displayName: 'Evaluar SLA bajo carga concurrente'
+        steps:
+          - checkout: self
+
+          - task: NodeTool@0
+            displayName: 'Configurar Node.js $(NODE_VERSION)'
+            inputs:
+              versionSpec: '$(NODE_VERSION)'
+
+          - script: |
+              npm install
+              node servidor/server.js &
+              for i in $(seq 1 20); do
+                curl -sf http://localhost:3000/api/health && break || sleep 1
+              done
+            displayName: 'Arrancar app-tienda en background'
+            workingDirectory: 'app-tienda'
+
+          # QUALITY GATE #2: Evalúa p95 < $(SLA_P95_MS) ms y error < $(SLA_ERROR_PCT)%.
+          # Si no cumple el SLA, carga-simple.js ejecuta process.exit(1) y detiene el deploy.
+          - script: |
+              BASE_URL=$(BASE_URL) \
+              CONCURRENCIA=15 \
+              DURACION_S=6 \
+              SLA_P95_MS=$(SLA_P95_MS) \
+              SLA_ERROR_PCT=$(SLA_ERROR_PCT) \
+              node pipeline/tests/carga-simple.js
+            displayName: '[QUALITY GATE #2] Ejecutar Prueba de Carga (SLA Gate)'
+
+  # ────────────────────────────────────────────────────────────────────────────
+  # STAGE 4: E2E PLAYWRIGHT + SCREENPLAY + BDD + AZURE TEST PLANS (FASE 3)
+  # ────────────────────────────────────────────────────────────────────────────
+  - stage: E2E_Local
+    displayName: '4. E2E BDD (Playwright + Screenplay + IA + Test Plans)'
+    dependsOn: LoadTest
+    jobs:
+      - job: e2e_screenplay
+        displayName: 'Ejecutar suite BDD Gherkin y vincular a Azure Test Plans'
+        strategy:
+          matrix:
+            chromium:
+              BROWSER: 'chromium'
+            firefox:
+              BROWSER: 'firefox'
+          maxParallel: 2
+        steps:
+          - checkout: self
+
+          - task: NodeTool@0
+            inputs:
+              versionSpec: '$(NODE_VERSION)'
+
+          - task: UsePythonVersion@0
+            inputs:
+              versionSpec: '$(PYTHON_VERSION)'
+
+          - script: |
+              npm install
+              node servidor/server.js &
+              for i in $(seq 1 20); do
+                curl -sf http://localhost:3000/api/health && break || sleep 1
+              done
+            displayName: 'Arrancar app-tienda en background'
+            workingDirectory: 'app-tienda'
+
+          # QUALITY GATE #3: 6 escenarios BDD (3 base + 3 propuestos con IA)
+          - script: |
+              python -m pip install --upgrade pip
+              pip install -r requirements.txt
+              python -m playwright install --with-deps $(BROWSER)
+              mkdir -p resultados
+              pytest --browser $(BROWSER) \
+                     --junitxml=resultados/junit-$(BROWSER).xml
+            displayName: '[QUALITY GATE #3] Ejecutar E2E Screenplay + pytest-bdd en $(BROWSER)'
+            workingDirectory: 'e2e'
+
+          - script: |
+              python tools/triage_ia.py resultados/junit-$(BROWSER).xml || true
+            displayName: 'Triaje asistido por IA (genera prompt para Claude + MCP)'
+            workingDirectory: 'e2e'
+            condition: always()
+
+          - task: PublishTestResults@2
+            displayName: 'Publicar resultados JUnit XML en Azure DevOps'
+            condition: always()
+            inputs:
+              testResultsFormat: 'JUnit'
+              testResultsFiles: 'e2e/resultados/junit-$(BROWSER).xml'
+              testRunTitle: 'E2E Tienda Screenplay BDD - $(BROWSER)'
+
+          - script: |
+              if [ "$BROWSER" != "chromium" ]; then exit 0; fi
+              if [ -z "$AZURE_DEVOPS_PAT" ]; then
+                echo "AZURE_DEVOPS_PAT no definido: se omite actualización de Test Points vía API."
+                exit 0
+              fi
+              python tools/publicar_test_plan.py || true
+            displayName: 'Actualizar Test Points (@TC19..@TC24) en Azure Test Plans'
+            workingDirectory: 'e2e'
+            condition: always()
+            env:
+              AZURE_DEVOPS_PAT: $(AZURE_DEVOPS_PAT)
+              TEST_PLAN_ID: $(TEST_PLAN_ID)
+              TEST_SUITE_ID: $(TEST_SUITE_ID)
+              JUNIT_PATH: 'resultados/junit-chromium.xml'
+
+  # ────────────────────────────────────────────────────────────────────────────
+  # STAGE 5: EJECUCIÓN EN LA NUBE — SAUCE LABS (FASE 4)
+  # ────────────────────────────────────────────────────────────────────────────
+  - stage: E2E_Sauce
+    displayName: '5. Ejecución en la Nube (Sauce Labs + Sauce Connect)'
+    dependsOn: E2E_Local
+    condition: and(succeeded(), ne(variables['SAUCE_USERNAME'], ''))
+    jobs:
+      - job: e2e_sauce_cloud
+        displayName: 'Correr la misma suite E2E contra navegadores reales en Sauce Labs'
+        steps:
+          - checkout: self
+
+          - task: NodeTool@0
+            inputs:
+              versionSpec: '$(NODE_VERSION)'
+
+          - task: UsePythonVersion@0
+            inputs:
+              versionSpec: '$(PYTHON_VERSION)'
+
+          - script: |
+              npm install
+              node servidor/server.js &
+              for i in $(seq 1 20); do
+                curl -sf http://localhost:3000/api/health && break || sleep 1
+              done
+            displayName: 'Arrancar app-tienda en el agente'
+            workingDirectory: 'app-tienda'
+
+          - script: |
+              curl -sL -o sc.tar.gz https://saucelabs.com/downloads/sauce-connect/5.2.2/sauce-connect-5.2.2_linux.x86_64.tar.gz
+              tar -xzf sc.tar.gz
+              SC_BIN=$(find . -name 'sauce-connect' -type f | head -n1)
+              "$SC_BIN" run \
+                --username "$SAUCE_USERNAME" \
+                --access-key "$SAUCE_ACCESS_KEY" \
+                --region us-west-1 \
+                --tunnel-name "$SAUCE_TUNNEL" &
+              for i in $(seq 1 30); do
+                curl -sf http://localhost:9000/readiness && break || sleep 2
+              done
+            displayName: 'Abrir túnel Sauce Connect hacia localhost:3000'
+            env:
+              SAUCE_USERNAME: $(SAUCE_USERNAME)
+              SAUCE_ACCESS_KEY: $(SAUCE_ACCESS_KEY)
+              SAUCE_TUNNEL: 'tienda-tunnel-$(Build.BuildId)'
+
+          - script: |
+              pip install -r requirements.txt
+              python -m playwright install chromium
+              mkdir -p resultados
+              pytest --junitxml=resultados/junit-sauce.xml
+            displayName: 'Ejecutar E2E en Sauce Labs (Windows 11 / Chrome)'
+            workingDirectory: 'e2e'
+            env:
+              SAUCE: '1'
+              SAUCE_USERNAME: $(SAUCE_USERNAME)
+              SAUCE_ACCESS_KEY: $(SAUCE_ACCESS_KEY)
+              SAUCE_REGION: 'us-west-1'
+              SAUCE_BROWSER: 'chrome'
+              SAUCE_PLATFORM: 'Windows 11'
+              SAUCE_TUNNEL: 'tienda-tunnel-$(Build.BuildId)'
+              BASE_URL: 'http://localhost:3000'
+              BUILD_TAG: 'tienda-e2e-$(Build.BuildId)'
+
+          - task: PublishTestResults@2
+            condition: always()
+            inputs:
+              testResultsFormat: 'JUnit'
+              testResultsFiles: 'e2e/resultados/junit-sauce.xml'
+              testRunTitle: 'E2E Tienda - Sauce Labs Cloud'
+
+  # ────────────────────────────────────────────────────────────────────────────
+  # STAGE 6: CONTENEDORES DOCKER + CONTRACT TESTING PACT + ACR (FASE 5)
+  # ────────────────────────────────────────────────────────────────────────────
+  - stage: Container_And_Contract
+    displayName: '6. Contenedores Docker, Contract Testing (Pact) & ACR'
+    dependsOn: LoadTest
+    jobs:
+      - job: pact_and_docker
+        displayName: 'Verificar Contrato Pact y Construir/Publicar Imagen Docker'
+        steps:
+          - checkout: self
+
+          - task: NodeTool@0
+            inputs:
+              versionSpec: '$(NODE_VERSION)'
+
+          - script: |
+              npm install --prefix app-tienda
+              node app-tienda/servidor/server.js &
+              for i in $(seq 1 20); do
+                curl -sf http://localhost:3000/api/health && break || sleep 1
+              done
+              node pact/consumer/productos.consumer.pact.js
+              node pact/provider/verificar-proveedor.js
+            displayName: '[QUALITY GATE #4] Contract Testing con Pact (Consumer + Provider)'
+
+          - script: |
+              docker build -t $(ACR_NAME).azurecr.io/$(IMAGE_NAME):$(Build.BuildId) \
+                           -t $(ACR_NAME).azurecr.io/$(IMAGE_NAME):latest .
+              docker run -d --name tienda-container -p 3005:3000 $(ACR_NAME).azurecr.io/$(IMAGE_NAME):latest
+              for i in $(seq 1 20); do
+                curl -sf http://localhost:3005/api/health && break || sleep 1
+              done
+              BASE_URL=http://localhost:3005 node pipeline/tests/smoke-api.js
+              docker stop tienda-container && docker rm tienda-container
+            displayName: 'Construir imagen Docker, validar HEALTHCHECK y correr Smoke Test al contenedor'
+
+          - script: |
+              if [ -z "$ACR_PASSWORD" ]; then
+                echo "Credenciales ACR no configuradas: imagen validada localmente y lista para push a $(ACR_NAME).azurecr.io"
+                exit 0
+              fi
+              echo "$ACR_PASSWORD" | docker login $(ACR_NAME).azurecr.io -u "$ACR_USERNAME" --password-stdin
+              docker push $(ACR_NAME).azurecr.io/$(IMAGE_NAME):$(Build.BuildId)
+              docker push $(ACR_NAME).azurecr.io/$(IMAGE_NAME):latest
+            displayName: 'Publicar imagen en Azure Container Registry (ACR)'
+            env:
+              ACR_USERNAME: $(ACR_USERNAME)
+              ACR_PASSWORD: $(ACR_PASSWORD)

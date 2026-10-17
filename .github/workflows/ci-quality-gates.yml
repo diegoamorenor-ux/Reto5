@@ -1,0 +1,77 @@
+name: Reto 5 — QA Cloud-Native Pipeline (Quality Gates + BDD + Pact + Docker)
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  qa-cloud-native:
+    name: Build -> Smoke Gate -> Load Gate -> E2E BDD Screenplay -> Pact & Docker
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 1. Checkout repositorio
+        uses: actions/checkout@v4
+
+      - name: 2. Configurar Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: 3. Configurar Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: 4. Fase 1 — Instalar dependencias y generar datos deterministas (Faker Seed 12345 + GDPR)
+        run: |
+          npm install
+          npm install --prefix app-tienda
+          npm run generar
+
+      - name: 5. Iniciar app-tienda en segundo plano
+        run: |
+          node app-tienda/servidor/server.js &
+          for i in $(seq 1 20); do
+            curl -sf http://localhost:3000/api/health && break || sleep 1
+          done
+
+      - name: 6. Fase 2 — Quality Gate 1 (Smoke Tests API & Front)
+        run: node pipeline/tests/smoke-api.js
+
+      - name: 7. Fase 2 — Quality Gate 2 (Load Test SLA p95 < 800ms y Error < 1%)
+        run: SLA_P95_MS=800 SLA_ERROR_PCT=1 CONCURRENCIA=15 DURACION_S=5 node pipeline/tests/carga-simple.js
+
+      - name: 8. Fase 3 — Quality Gate 3 (E2E Playwright + Screenplay + pytest-bdd + IA)
+        working-directory: e2e
+        run: |
+          pip install -r requirements.txt
+          python -m playwright install --with-deps chromium
+          mkdir -p resultados
+          pytest --junitxml=resultados/junit.xml
+          python tools/triage_ia.py resultados/junit.xml
+
+      - name: 9. Fase 5 — Quality Gate 4 (Contract Testing con Pact Consumer & Provider)
+        run: npm run pact:verify
+
+      - name: 10. Fase 5 — Construir imagen Docker y validar HEALTHCHECK (/api/health)
+        run: |
+          docker build -t app-tienda:ci .
+          docker run -d --name tienda-ci -p 3005:3000 app-tienda:ci
+          for i in $(seq 1 20); do
+            curl -sf http://localhost:3005/api/health && break || sleep 1
+          done
+          BASE_URL=http://localhost:3005 node pipeline/tests/smoke-api.js
+          docker stop tienda-ci && docker rm tienda-ci
+
+      - name: 11. Publicar artefactos JUnit y Contrato Pact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: evidencias-pipeline-reto5
+          path: |
+            e2e/resultados/
+            pact/pacts/
+            datos/db.json
