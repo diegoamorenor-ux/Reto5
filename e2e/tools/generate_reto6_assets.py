@@ -21,20 +21,36 @@ TALLER6_EXT_DIR = ROOT.parent / "Taller6"
 
 
 def build_reto6_images():
+    nested = RETO6_DIR / "reto6-quality-gate"
+    if nested.exists():
+        shutil.rmtree(nested)
+
     log_failed = (LOGS_DIR / "01_pytest_inicial_14_failed.txt").read_text(encoding="utf-8")
     log_passed = (LOGS_DIR / "02_pytest_final_14_passed.txt").read_text(encoding="utf-8")
+    # Compact long rootdir path in log_passed so every test fits on a single line
+    log_passed_clean = log_passed.replace(
+        "/Users/diegomoreno/Desktop/Diplomado Ejecutivo en Automatización Inteligente de Pruebas de Software/Modulo5/taller5/reto6-quality-gate",
+        "~/Modulo5/Taller6",
+    ).replace(
+        "/Users/diegomoreno/Desktop/Diplomado Ejecutivo en Automatización Inteligente de Pruebas de Software/Modulo5/taller5/e2e/.venv/bin/python3.13",
+        "~/.venv/bin/python3.13",
+    )
+    log_failed_clean = log_failed.replace(
+        "/Users/diegomoreno/Desktop/Diplomado Ejecutivo en Automatización Inteligente de Pruebas de Software/Modulo5/taller5/reto6-quality-gate/",
+        "",
+    )
     log_gate = (LOGS_DIR / "03_quality_gate_salida.json").read_text(encoding="utf-8")
 
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=True)
-        page = browser.new_page(viewport={"width": 1220, "height": 900})
+        page = browser.new_page(viewport={"width": 1220, "height": 1400})
 
         # 1. Baseline 14 failed
         body_failed = f"""
         <div class="panel">
           <h4>Ejecución Inicial del Esqueleto (uv run pytest -v) -> 14 failed</h4>
           <pre>$ uv run pytest -v
-{html.escape(log_failed.strip())}</pre>
+{html.escape(log_failed_clean.strip())}</pre>
         </div>
         """
         render_html_to_png(
@@ -55,7 +71,7 @@ def build_reto6_images():
           <div class="panel">
             <h4>Suite de Calificación Automática (uv run pytest -v) -> 14 passed</h4>
             <pre>$ uv run pytest -v
-{html.escape(log_passed.strip())}</pre>
+{html.escape(log_passed_clean.strip())}</pre>
           </div>
           <div class="panel">
             <h4>Resumen de las 6 Funciones Calificadas en Verde</h4>

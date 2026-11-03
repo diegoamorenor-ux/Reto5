@@ -146,7 +146,7 @@ def make_card_html(title: str, subtitle: str, badge_text: str, badge_color: str,
 
 
 def render_html_to_png(page, html_str: str, out_path: Path):
-    page.set_viewport_size({"width": 1220, "height": 900})
+    page.set_viewport_size({"width": 1220, "height": 1400})
     page.set_content(html_str, wait_until="load")
     box = page.locator(".window").bounding_box()
     page.screenshot(
