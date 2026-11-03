@@ -1,0 +1,55 @@
+============================= test session starts ==============================
+platform darwin -- Python 3.13.4, pytest-9.1.1, pluggy-1.7.0
+rootdir: /Users/diegomoreno/Desktop/Diplomado Ejecutivo en Automatización Inteligente de Pruebas de Software/Modulo5/taller5/reto6-quality-gate
+configfile: pyproject.toml
+testpaths: tests
+plugins: xdist-3.8.0, bdd-9.0.0, Faker-40.43.0, playwright-0.10.0, allure-pytest-2.16.2, platformdirs-4.13.5
+collected 14 items
+
+tests/test_quality_gate.py FFFFFFFFFFFFFF                                [100%]
+
+=================================== FAILURES ===================================
+E   NotImplementedError
+/Users/diegomoreno/Desktop/Diplomado Ejecutivo en Automatización Inteligente de Pruebas de Software/Modulo5/taller5/reto6-quality-gate/src/quality_gate.py:30: NotImplementedError
+E   NotImplementedError
+/Users/diegomoreno/Desktop/Diplomado Ejecutivo en Automatización Inteligente de Pruebas de Software/Modulo5/taller5/reto6-quality-gate/src/quality_gate.py:30: NotImplementedError
+E   NotImplementedError
+/Users/diegomoreno/Desktop/Diplomado Ejecutivo en Automatización Inteligente de Pruebas de Software/Modulo5/taller5/reto6-quality-gate/src/quality_gate.py:40: NotImplementedError
+E   NotImplementedError
+/Users/diegomoreno/Desktop/Diplomado Ejecutivo en Automatización Inteligente de Pruebas de Software/Modulo5/taller5/reto6-quality-gate/src/quality_gate.py:40: NotImplementedError
+E   NotImplementedError
+/Users/diegomoreno/Desktop/Diplomado Ejecutivo en Automatización Inteligente de Pruebas de Software/Modulo5/taller5/reto6-quality-gate/src/quality_gate.py:50: NotImplementedError
+E   NotImplementedError
+/Users/diegomoreno/Desktop/Diplomado Ejecutivo en Automatización Inteligente de Pruebas de Software/Modulo5/taller5/reto6-quality-gate/src/quality_gate.py:50: NotImplementedError
+E   NotImplementedError
+/Users/diegomoreno/Desktop/Diplomado Ejecutivo en Automatización Inteligente de Pruebas de Software/Modulo5/taller5/reto6-quality-gate/src/quality_gate.py:61: NotImplementedError
+E   NotImplementedError
+/Users/diegomoreno/Desktop/Diplomado Ejecutivo en Automatización Inteligente de Pruebas de Software/Modulo5/taller5/reto6-quality-gate/src/quality_gate.py:61: NotImplementedError
+E   NotImplementedError
+/Users/diegomoreno/Desktop/Diplomado Ejecutivo en Automatización Inteligente de Pruebas de Software/Modulo5/taller5/reto6-quality-gate/src/quality_gate.py:76: NotImplementedError
+E   NotImplementedError
+/Users/diegomoreno/Desktop/Diplomado Ejecutivo en Automatización Inteligente de Pruebas de Software/Modulo5/taller5/reto6-quality-gate/src/quality_gate.py:76: NotImplementedError
+E   NotImplementedError
+/Users/diegomoreno/Desktop/Diplomado Ejecutivo en Automatización Inteligente de Pruebas de Software/Modulo5/taller5/reto6-quality-gate/src/quality_gate.py:76: NotImplementedError
+E   NotImplementedError
+/Users/diegomoreno/Desktop/Diplomado Ejecutivo en Automatización Inteligente de Pruebas de Software/Modulo5/taller5/reto6-quality-gate/src/quality_gate.py:93: NotImplementedError
+E   NotImplementedError
+/Users/diegomoreno/Desktop/Diplomado Ejecutivo en Automatización Inteligente de Pruebas de Software/Modulo5/taller5/reto6-quality-gate/src/quality_gate.py:93: NotImplementedError
+E   NotImplementedError
+/Users/diegomoreno/Desktop/Diplomado Ejecutivo en Automatización Inteligente de Pruebas de Software/Modulo5/taller5/reto6-quality-gate/src/quality_gate.py:93: NotImplementedError
+=========================== short test summary info ============================
+FAILED tests/test_quality_gate.py::test_flake_rate_basico - NotImplementedError
+FAILED tests/test_quality_gate.py::test_flake_rate_sin_tests - NotImplemented...
+FAILED tests/test_quality_gate.py::test_defect_leakage_basico - NotImplemente...
+FAILED tests/test_quality_gate.py::test_defect_leakage_sin_defectos - NotImpl...
+FAILED tests/test_quality_gate.py::test_effectiveness_basico - NotImplemented...
+FAILED tests/test_quality_gate.py::test_effectiveness_sin_defectos_es_uno - N...
+FAILED tests/test_quality_gate.py::test_fairness_gap_ejemplo_del_curso - NotI...
+FAILED tests/test_quality_gate.py::test_fairness_gap_una_region - NotImplemen...
+FAILED tests/test_quality_gate.py::test_psi_distribuciones_identicas - NotImp...
+FAILED tests/test_quality_gate.py::test_psi_drift_evidente - NotImplementedError
+FAILED tests/test_quality_gate.py::test_psi_maneja_bucket_en_cero - NotImplem...
+FAILED tests/test_quality_gate.py::test_gate_release_sano_pasa - NotImplement...
+FAILED tests/test_quality_gate.py::test_gate_bloquea_solo_lo_roto - NotImplem...
+FAILED tests/test_quality_gate.py::test_gate_valor_igual_al_umbral_pasa - Not...
+============================== 14 failed in 0.04s ==============================

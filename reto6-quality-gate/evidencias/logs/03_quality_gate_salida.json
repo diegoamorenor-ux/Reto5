@@ -1,0 +1,10 @@
+{
+  "checks": {
+    "flake_rate": true,
+    "defect_leakage": false,
+    "test_effectiveness": true,
+    "fairness_gap": true,
+    "psi": true
+  },
+  "passed": false
+}

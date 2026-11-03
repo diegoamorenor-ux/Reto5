@@ -69,6 +69,12 @@ taller5/
 │       ├── front-tienda-api-tienda.json          # Contrato Pact generado
 │       └── verificacion-provider-resultado.json  # Reporte de verificación del proveedor
 ├── evidencias/                        # Capturas de pantalla reales y logs de ejecución de las 6 fases
+├── reto6-quality-gate/                # Reto 6 Consecutivo: Quality Gate Gobernanza QA + ML (14 passed)
+│   ├── src/quality_gate.py            # Implementación de flake_rate, defect_leakage, test_effectiveness, fairness_gap, psi, quality_gate
+│   ├── tests/test_quality_gate.py     # Suite de calificación automática (14 passed)
+│   ├── evidencias/                    # Capturas de 14 failed (baseline), 14 passed y veredicto JSON
+│   ├── DOCUMENTO_DE_SOPORTE_RETO6.md  # Documento de soporte independiente del Reto 6
+│   └── DOCUMENTO_DE_SOPORTE_RETO6.pdf # Entregable PDF independiente del Reto 6
 ├── Dockerfile                         # Fase 5: Dockerfile raíz (node:20-alpine + Faker seed + HEALTHCHECK)
 ├── azure-pipelines.yml                # Pipeline raíz de Azure DevOps
 ├── DOCUMENTO_DE_SOPORTE_RETO5.md      # Documento de soporte completo con todas las evidencias y análisis
